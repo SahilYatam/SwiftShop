@@ -1,0 +1,40 @@
+Backend Functionality
+
+
+Users: Buyer & Seller
+
+Authentication: Signup, login, logout
+
+
+## Features
+✅ User Authentication (JWT)  
+✅ Multi-Seller Marketplace  
+✅ Product Search & Filters  
+✅ Shopping Cart & Checkout  
+✅ Admin Dashboard for Managing Users & Products
+✅ Analytics Dashboard
+
+
+
+CONTROLLERS
+1 controller: createProduct, update and delete product, getProducts, getProductsByCategory, getFeaturedProducts, getRecommendedProducts.
+2 controller: addToCart, removeAllFromCart, updateQuantity, getCartProducts.
+3 controller: searchProduct, filterProduct,
+4 controller: adminDashboard, gettingOrders
+5 controller: getAnalyticsData, getDailySalesData
+
+
+MODELS
+
+1 model: user, fields: name, email, password, cratItems[{quantity}, {product}], role[buyer, seller]
+2 model: product, fields: name, description, price, stock, image, category, isFeatured
+3 model: order, fields: userId, products[{product},{quantity},{price}], totalAmount, stripeSessionId
+
+
+
+
+
+
+
+
+
