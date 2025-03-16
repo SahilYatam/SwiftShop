@@ -28,6 +28,11 @@ const orderSchema = new Schema(
       },
     ],
 
+    address: {
+        type: String,
+        required: true
+    }, 
+
     totalAmount: {
       type: Number,
       required: true,

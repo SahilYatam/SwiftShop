@@ -11,6 +11,7 @@ import {
   setCookies,
   storeRefreshToken,
 } from "../utils/setCookiesAndToken.js";
+
 import { redis } from "../config/redis.js";
 import {
   sendPasswordResetEmail,
@@ -170,6 +171,54 @@ export const resetPassword = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, {}, "Password reset successfull"));
   } catch (error) {
     console.log(`Error in reset password controller ${error.message}`);
+    throw new ApiError(500, "Internal server error");
+  }
+});
+
+export const getUserProfile = asyncHandler(async (req, res) => {
+  try {
+    const user = await User.findById(req.user?._id).select("-password");
+    if (!user) throw new ApiError(404, "User not found");
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { user }, "User details fetch successfully"));
+  } catch (error) {
+    console.log(`Error in getUser controller ${error.message}`);
+    throw new ApiError(500, "Internal server error");
+  }
+});
+
+export const refreshAccessToken = asyncHandler(async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) throw new ApiError(400, "No refresh token provided");
+
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECERET);
+    const storedToken = await redis.get(`refresh_token:${decoded.userId}`);
+
+    if (storedToken !== refreshToken) {
+      throw new ApiError(400, "Invalid refresh token");
+    }
+
+    const accessToken = jwt.sign(
+      { userId: decoded.userId },
+      process.env.ACCESS_TOKEN_SECERET,
+      { expiresIn: "15m" }
+    );
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Token refreshed successfully"));
+  } catch (error) {
+    console.log(`Error in refreshAccessToken controller ${error.message}`);
     throw new ApiError(500, "Internal server error");
   }
 });

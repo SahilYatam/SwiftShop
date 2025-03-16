@@ -17,7 +17,7 @@ Authentication: Signup, login, logout
 
 
 CONTROLLERS
-1 controller: createProduct, update and delete product, getProducts, getProductsByCategory, getFeaturedProducts, getRecommendedProducts.
+1 controller: createProduct, update and delete product, getProducts, getProductsByCategory, getFeaturedProducts, toggleFeaturedProducts, getRecommendedProducts.
 2 controller: addToCart, removeAllFromCart, updateQuantity, getCartProducts.
 3 controller: searchProduct, filterProduct,
 4 controller: adminDashboard, gettingOrders

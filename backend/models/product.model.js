@@ -2,6 +2,12 @@ import mongoose, { Schema } from "mongoose";
 
 const productSchema = new Schema(
   {
+    seller: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
     name: {
       type: String,
       required: true,
@@ -18,6 +24,12 @@ const productSchema = new Schema(
       required: true,
     },
 
+    stock: {
+      type: Number,
+      min: 1,
+      required: true,
+    },
+
     image: {
       type: String,
       required: [true, "Image is required"],
@@ -31,6 +43,39 @@ const productSchema = new Schema(
     isFeatured: {
       type: Boolean,
       default: false,
+    },
+
+    reviews: [
+      {
+        user: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+        rate: {
+          type: Number,
+          min: 1,
+          max: 5,
+          required: true,
+        },
+        comment: {
+          type: String,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+
+    rating: {
+      type: Number,
+      default: 0,
+    },
+    
+    numReviews: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }
