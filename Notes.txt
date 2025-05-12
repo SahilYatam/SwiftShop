@@ -31,6 +31,8 @@ MODELS
 3 model: order, fields: userId, products[{product},{quantity},{price}], totalAmount, stripeSessionId
 
 
+What are the actions that a user can perform ?
+
 
 
 

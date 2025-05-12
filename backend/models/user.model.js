@@ -21,7 +21,7 @@ const userSchema = new Schema(
       minlength: [8, "Password must be at least 8 character long"],
     },
 
-    cartItem: [
+    cartItems: [
       {
         quantity: {
           type: Number,

@@ -38,6 +38,25 @@ export const createProducts = asyncHandler(async (req, res) => {
       seller: req.user?._id,
     });
 
+    await product.save();
+
+    // ⏬ Redis cache for the seller
+    const cacheKey = `products:seller:${seller._id}`;
+
+    // Fetch existing cached products (if any)
+    const existingCache = await redis.get(cacheKey);
+    let updateProductList = [];
+
+    if (existingCache) {
+      const parsedCache = JSON.parse(existingCache);
+      updateProductList = [...parsedCache, product];
+    } else {
+      updateProductList = [product];
+    }
+
+    // Save updated product list back to Redis
+    await redis.set(cacheKey, JSON.stringify(updateProductList), "EX", 3600); // 1 hour expiry
+
     return res
       .status(201)
       .json(new ApiResponse(201, { product }, "Product created successfully"));
@@ -159,7 +178,9 @@ export const updateProductImg = asyncHandler(async (req, res) => {
 export const deleteProduct = asyncHandler(async (req, res) => {
   const { id: productId } = req.params;
   const user = req.user;
+
   if (!user) throw new ApiError(403, "Unauthorized");
+
   try {
     const product = await Product.findById(productId);
     if (!product) throw new ApiError(404, "Product not found");
@@ -169,17 +190,35 @@ export const deleteProduct = asyncHandler(async (req, res) => {
       throw new ApiError(403, "You are not allowed to delete this product");
     }
 
+    // Remove from Cloudinary if image exists
     if (product.image) {
       try {
         const public_id = product.image.split("/").pop().split(".")[0];
         await cloudinary.uploader.destroy(`productsImg/${public_id}`);
         console.log("Image deleted successfully");
       } catch (error) {
-        console.log("Error while deleting image from cloudinary");
+        console.log(
+          "Error while deleting image from cloudinary",
+          error.message
+        );
       }
     }
 
+    // ❌ Delete from MongoDB
     await Product.findOneAndDelete(product);
+
+    // Redis Cache (remove product from seller's cached list);
+    const cacheKey = `product:seller:${user._id}`;
+    const existingCache = await redis.get(cacheKey);
+
+    if (existingCache) {
+      const parsedCache = JSON.parse(existingCache);
+      const updatedCache = parsedCache.filter(
+        (item) => item._id.toString() !== productId
+      );
+
+      await redis.set(cacheKey, JSON.stringify(updatedCache), "EX", 3600);
+    }
 
     return res
       .status(200)
@@ -346,6 +385,35 @@ export const addReviews = asyncHandler(async (req, res) => {
     return res
       .status(201)
       .json(new ApiResponse(201, { reviews: product.reviews }, "Rating added"));
+  } catch (error) {
+    console.log("Error in addReviews", error.message);
+    throw new ApiError(500, "Internal server error");
+  }
+});
+
+export const searchProducts = asyncHandler(async (req, res) => {
+  const { query } = req.query; // Get search query from request
+
+  if (!query) {
+    throw new ApiError(400, "Search query is required");
+  }
+
+  try {
+    // Search in product name and description (case-insensitive)
+    const products = await Product.findOne({
+      $or: [
+        { name: { $regex: query, $options: "i" } }, // Search in name
+        { description: { $regex: query, $options: "i" } },
+      ],
+    });
+
+    if (products.length === 0) {
+      throw new ApiError(400, "No product found");
+    }
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { products }, "Products found"));
   } catch (error) {
     console.log("Error in addReviews", error.message);
     throw new ApiError(500, "Internal server error");
