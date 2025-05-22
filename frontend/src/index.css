@@ -1,2 +1,71 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+@theme {
+  --font-zentry: "zentry", sans-serif;
+  --font-general: "general", sans-serif;
+  --font-circular: "circular", sans-serif;
+  --font-robert-medium: "robert-medium", sans-serif;
+  --font-robert-regular: "robert-regular", sans-serif;
+
+  --color-blue-50: #dfdff0;
+  --color-blue-75: #dfdff2;
+  --color-blue-100: #f0f2fa;
+  --color-blue-200: #010101;
+  --color-blue-300: #4fb7dd;
+
+  --color-violet-300: #5724ff;
+
+  --color-yellow-100: #83983f;
+  --color-yellow-300: #edff66;
+}
+
+@layer base {
+  @font-face {
+    font-family: "zentry";
+    src: url("/fonts/zentry-regular.woff2") format("woff2");
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "general";
+    src: url("/fonts/general.woff2") format("woff2");
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "circular";
+    src: url("/fonts/circularweb-book.woff2") format("woff2");
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "robert-medium";
+    src: url("/fonts/robert-medium.woff2") format("woff2");
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "robert-regular";
+    src: url("/fonts/robert-regular.woff2") format("woff2");
+    font-display: swap;
+  }
+}
+
+@layer utilities {
+  .font-zentry {
+    font-family: var(--font-zentry);
+  }
+  .font-general {
+    font-family: var(--font-general);
+  }
+  .font-circular {
+    font-family: var(--font-circular);
+  }
+  .font-robert-medium {
+    font-family: var(--font-robert-medium);
+  }
+  .font-robert-regular {
+    font-family: var(--font-robert-regular);
+  }
+}

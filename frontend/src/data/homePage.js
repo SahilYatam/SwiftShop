@@ -5,5 +5,5 @@ export const categories = [
     {heref: "/fitnessGears", name: "Fitness Gear", imageUrl: "/fitnessGears.jpg"},
     {heref: "/stationery", name: "Books & Stationery", imageUrl: "/stationery.jpg"},
     {heref: "/watches", name: "Watches", imageUrl: "/watches.jpg"},
-    {heref: "/camera", name: "Camera", imageUrl: "/camera.jpg"},
+    
 ]
