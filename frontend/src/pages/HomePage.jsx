@@ -16,7 +16,9 @@ const ExploreCategory = ({ src, title, description, price }) => {
         <p> {description} </p>
         <p>{price}</p>
         <div className="card-actions">
-          <button className="btn rounded-full bg-blue-500 outline-none border-none hover:bg-blue-600">Buy Now</button>
+          <button className="btn rounded-full bg-blue-500 outline-none border-none hover:bg-blue-600">
+            Buy Now
+          </button>
         </div>
       </div>
     </div>
@@ -41,8 +43,8 @@ const HomePage = () => {
           ))}
         </div>
 
-        <div className="mt-10 bg-white rounded-full w-[23vw] md:w-[25vw] h-9 max-sm:w-[45vw] max-sm:h-7 flex justify-center items-center">
-          <span className="z-10 px-4 md:text-[1rem] max-sm:text-[12px] text-black font-robert-medium">
+        <div className="mt-10 bg-white rounded-full w-64 max-w-md  py-2 px-6 flex justify-center items-center">
+          <span className="text-sm md:text-base text-black font-robert-medium text-center whitespace-nowrap">
             Additional items to explore
           </span>
         </div>
@@ -60,13 +62,13 @@ const HomePage = () => {
           ))}
         </div>
 
-        <div className="mt-10 bg-white rounded-full w-[23vw] md:w-[27vw] max-sm:w-[47vw] max-sm:h-7 h-9 flex justify-center items-center">
-          <span className="z-10 px-4 md:text-[1rem] max-sm:text-[12px] text-black font-robert-medium">
+        <div className="mt-10 bg-white rounded-full w-64 max-w-md  py-2 px-6 flex justify-center items-center">
+          <span className="text-sm md:text-base text-black font-robert-medium text-center whitespace-nowrap">
             Related to items you've viewed
           </span>
         </div>
 
-        <div className="w-full h-90 bg-white mx-auto pl-5 pr-5 mt-5 rounded-2xl flex flex-nowrap justify-evenly items-center gap-5 overflow-x-scroll [&::-webkit-scrollbar]:h-3 [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-full">
+        <div className="w-full h-90 bg-white mx-auto pl-5 pr-5 mt-5 rounded-2xl flex flex-nowrap justify-evenly items-center gap-5 overflow-x-scroll">
           {explore.map((expCate, index) => (
             <div key={index}>
               <ExploreCategory

@@ -10,13 +10,30 @@ import DropdownContent from "./DropdownContent.jsx";
 const Navbar = () => {
   const [isUser, setIsUser] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  
+
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   const aTag = [
     { id: 1, tagName: "Home" },
     { id: 2, tagName: "Deals" },
     { id: 3, tagName: "What's New" },
   ];
-
 
   return (
     <div className="relative top-0  left-0 w-full h-16 bg-transparent border-b border-white/50 ">
@@ -47,7 +64,7 @@ const Navbar = () => {
                   "bg-transparent flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-500 w-[300px] mb-1"
                 }
               />
-              {/* Search Icon */} 
+              {/* Search Icon */}
               <button className=" text-black p-2  rounded-full transition cursor-pointer">
                 <FaSearch className="w-4 h-4" />
               </button>
@@ -60,10 +77,10 @@ const Navbar = () => {
                 <Button
                   type={"button"}
                   onClick={() => setIsOpen(!isOpen)}
-                  className="relative bg-transparent border-none p-0 pb-1 pr2"
+                  className="relative bg-transparent border-none p-0 pb-1 pr2 z-50"
                 >
-                  <FaUserCircle size={25}/>
-                    {isOpen && <DropdownContent />}
+                  <FaUserCircle size={25} />
+                  {isOpen && <DropdownContent dropdownRef={dropdownRef} />}
                 </Button>
 
                 <Button
@@ -77,17 +94,17 @@ const Navbar = () => {
                 </Button>
               </div>
             ) : (
-            <Link to={"/login"}>
-              <Button
-                type={"button"}
-                className={
-                  "text-white w-27 h-9 rounded-full bg-transparent border border-transparet hover:border-white text-[1em]"
-                }
-              >
-                <IoLogIn size={20} className="mr-1"/>
-                Loing
-              </Button>
-            </Link>
+              <Link to={"/login"}>
+                <Button
+                  type={"button"}
+                  className={
+                    "text-white w-27 h-9 rounded-full bg-transparent border border-transparet hover:border-white text-[1em]"
+                  }
+                >
+                  <IoLogIn size={20} className="mr-1" />
+                  Loing
+                </Button>
+              </Link>
             )}
           </div>
         </nav>
